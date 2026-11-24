@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "uploadedPhotoCount": 115,
-  "distinctWorksheetNote": "Day 23 appears twice; one lesson is retained. November 3 PDF: 46 scanned pages; 21 new instruction-bearing pages included in public original practice, one personal reflection withheld, eight prior duplicates held and 16 blank reverse scans held. Undated original work is not presented as current homework. November 3 seventeen-photo follow-up: twelve privacy-safe academic images support ten original-practice lessons; three rephotographed publisher assessment pages and two private reflections are held and not copied into the public app. Reuploads are not independent learning evidence. November 12 parent PDF intake: 24 page images reviewed; 16 instructional pages support nine undated cumulative lessons, five blank backs and three noncurricular/private pages held. Unit numbers do not establish a study date; newsletter and calendar are reviewed separately. No learner answers or marks are public.",
+  "uploadedPhotoCount": 128,
+  "distinctWorksheetNote": "Day 23 appears twice; one lesson is retained. November 3 PDF: 46 scanned pages; 21 new instruction-bearing pages included in public original practice, one personal reflection withheld, eight prior duplicates held and 16 blank reverse scans held. Undated original work is not presented as current homework. November 3 seventeen-photo follow-up: twelve privacy-safe academic images support ten original-practice lessons; three rephotographed publisher assessment pages and two private reflections are held and not copied into the public app. Reuploads are not independent learning evidence. November 12 parent PDF intake: 24 page images reviewed; 16 instructional pages support nine undated cumulative lessons, five blank backs and three noncurricular/private pages held. Unit numbers do not establish a study date; newsletter and calendar are reviewed separately. No learner answers or marks are public. November 24 intake: 13 source pages support seven anonymous cumulative lessons; no inferred current-week or test placement.",
   "lessons": [
     {
       "id": "fact-families",
@@ -5569,6 +5569,650 @@
           "hint": "Count how many groups of ten there are, then multiply by ten to find the value of all the groups."
         }
       ]
+    },
+    {
+      "id": "nov24-cumulative-long-vowel-patterns",
+      "title": "Long vowels: hear, map, and write",
+      "subject": "Reading / ELA",
+      "sources": [
+        "abvm-20261124-source-01.jpeg",
+        "abvm-20261124-source-02.jpeg"
+      ],
+      "skills": [
+        "long-vowel-word-spelling",
+        "long-vowel-word-recognition"
+      ],
+      "notes": [
+        "Long vowels usually say their letter names. Silent e and vowel teams are common spellings.",
+        "Say each sound, write the whole word, then reread it. On paper, try writing rain, kite, boat, seed and cube from spoken clues before seeing any options.",
+        "Some sounds have several spellings; check the written word after you try it."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-24",
+      "dateStatus": "Undated completed schoolwork; cumulative review only.",
+      "questions": [
+        {
+          "id": "abvm-1124-long-vowel-patterns-1",
+          "subject": "Reading / ELA",
+          "skill": "long-vowel-word-recognition",
+          "prompt": "Which word has the long a sound?",
+          "answer": "rain",
+          "choices": [
+            "ran",
+            "rain",
+            "run"
+          ],
+          "explanation": "The letters ai make the long a sound.",
+          "sourceFact": "Fresh original Grade 2 cumulative practice aligned to source-supported classroom skills; not an official test or dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Stretch the vowel in each word. Listen for the sound of the letter A's name rather than the short sound in cat."
+        },
+        {
+          "id": "abvm-1124-long-vowel-patterns-2",
+          "subject": "Reading / ELA",
+          "skill": "long-vowel-word-recognition",
+          "prompt": "Which word names something you can fly on a string?",
+          "answer": "kite",
+          "choices": [
+            "kit",
+            "kite",
+            "cut"
+          ],
+          "explanation": "The silent e helps i say its name.",
+          "sourceFact": "Fresh original Grade 2 cumulative practice aligned to source-supported classroom skills; not an official test or dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Look for a word with a final silent e that makes the vowel i say its own name."
+        },
+        {
+          "id": "abvm-1124-long-vowel-patterns-3",
+          "subject": "Reading / ELA",
+          "skill": "long-vowel-word-spelling",
+          "prompt": "Which spelling makes a word for a small green vegetable?",
+          "answer": "pea",
+          "choices": [
+            "pe",
+            "pea",
+            "pa"
+          ],
+          "explanation": "The ea team spells long e in pea.",
+          "sourceFact": "Fresh original Grade 2 cumulative practice aligned to source-supported classroom skills; not an official test or dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Say the vegetable's name and listen for long e. Look for two vowels working together to spell that sound."
+        }
+      ]
+    },
+    {
+      "id": "nov24-cumulative-compound-words",
+      "title": "Build and recognize compound words",
+      "subject": "Reading / ELA",
+      "sources": [
+        "abvm-20261124-source-03.jpeg",
+        "abvm-20261124-source-04.jpeg",
+        "abvm-20261124-source-05.jpeg",
+        "abvm-20261124-source-06.jpeg"
+      ],
+      "skills": [
+        "compound-word-recognition",
+        "compound-word-formation"
+      ],
+      "notes": [
+        "A compound word joins two words to make a new meaning.",
+        "Read each part and check whether the combined word is a real word.",
+        "On paper, write rain + coat, pan + cake, and sea + shell as complete words."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-24",
+      "dateStatus": "Undated completed schoolwork; cumulative review only.",
+      "questions": [
+        {
+          "id": "abvm-1124-compound-words-1",
+          "subject": "Reading / ELA",
+          "skill": "compound-word-recognition",
+          "prompt": "Which is a compound word?",
+          "answer": "raincoat",
+          "choices": [
+            "raincoat",
+            "rabbit",
+            "yellow"
+          ],
+          "explanation": "Rain and coat combine to make raincoat.",
+          "sourceFact": "Fresh original Grade 2 cumulative practice aligned to source-supported classroom skills; not an official test or dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Try splitting each choice into two smaller words. Both smaller words should have meanings of their own."
+        },
+        {
+          "id": "abvm-1124-compound-words-2",
+          "subject": "Reading / ELA",
+          "skill": "compound-word-formation",
+          "prompt": "What do pan and cake make?",
+          "answer": "pancake",
+          "choices": [
+            "cakepan",
+            "pancake",
+            "panbook"
+          ],
+          "explanation": "Pan + cake makes pancake.",
+          "sourceFact": "Fresh original Grade 2 cumulative practice aligned to source-supported classroom skills; not an official test or dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Say the two smaller words in the given order, then join them without leaving a space."
+        },
+        {
+          "id": "abvm-1124-compound-words-3",
+          "subject": "Reading / ELA",
+          "skill": "compound-word-recognition",
+          "prompt": "Which is NOT a compound word?",
+          "answer": "pencil",
+          "choices": [
+            "bedtime",
+            "pencil",
+            "moonlight"
+          ],
+          "explanation": "Pencil does not split into two smaller meaningful words.",
+          "sourceFact": "Fresh original Grade 2 cumulative practice aligned to source-supported classroom skills; not an official test or dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Check each option for two smaller meaningful words. One word cannot be split this way."
+        }
+      ]
+    },
+    {
+      "id": "nov24-cumulative-spelling-vowel-teams",
+      "title": "Spelling: long-a spelling patterns",
+      "subject": "Spelling / Handwriting",
+      "sources": [
+        "abvm-20261124-source-07.jpeg"
+      ],
+      "skills": [
+        "spelling-patterns"
+      ],
+      "notes": [
+        "The long a sound can be spelled ai, ay, a-e, ea, or eigh in familiar words.",
+        "Practice saying, covering, writing and checking a complete word. On paper, try eight, day, plate, great and snail from dictation.",
+        "The sound is similar, but the correct spelling depends on the word."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-24",
+      "dateStatus": "Undated completed schoolwork; cumulative review only.",
+      "questions": [
+        {
+          "id": "abvm-1124-spelling-vowel-teams-1",
+          "subject": "Spelling / Handwriting",
+          "skill": "spelling-patterns",
+          "prompt": "Which word is spelled correctly?",
+          "answer": "eight",
+          "choices": [
+            "eigth",
+            "eight",
+            "ateh"
+          ],
+          "explanation": "Eight uses the letters eigh for the long a sound.",
+          "sourceFact": "Fresh original Grade 2 cumulative practice aligned to source-supported classroom skills; not an official test or dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "For this long-a word, think of the vowel team eigh and check the order of the final letters."
+        },
+        {
+          "id": "abvm-1124-spelling-vowel-teams-2",
+          "subject": "Spelling / Handwriting",
+          "skill": "spelling-patterns",
+          "prompt": "Which word has long a spelled ay?",
+          "answer": "day",
+          "choices": [
+            "date",
+            "day",
+            "dime"
+          ],
+          "explanation": "The letters ay make the long a sound in day.",
+          "sourceFact": "Fresh original Grade 2 cumulative practice aligned to source-supported classroom skills; not an official test or dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Look for the letters a and y together, not a silent e or the sound of long i."
+        },
+        {
+          "id": "abvm-1124-spelling-vowel-teams-3",
+          "subject": "Spelling / Handwriting",
+          "skill": "spelling-patterns",
+          "prompt": "Which word has long a spelled ai?",
+          "answer": "snail",
+          "choices": [
+            "snake",
+            "snail",
+            "snow"
+          ],
+          "explanation": "Ai spells the long a sound in snail.",
+          "sourceFact": "Fresh original Grade 2 cumulative practice aligned to source-supported classroom skills; not an official test or dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Search each choice for a and i side by side. Then say the word to check its vowel sound."
+        }
+      ]
+    },
+    {
+      "id": "nov24-cumulative-related-facts",
+      "title": "Subtraction, related facts and missing addends",
+      "subject": "Math",
+      "sources": [
+        "abvm-20261124-source-08.jpeg",
+        "abvm-20261124-source-09.jpeg",
+        "abvm-20261124-source-10.jpeg"
+      ],
+      "skills": [
+        "subtraction-within-20",
+        "fact-families",
+        "missing-addend",
+        "addition-within-100"
+      ],
+      "notes": [
+        "A fact family uses the same whole and parts; addition and subtraction undo each other.",
+        "For subtraction, find the missing part and check by adding it back.",
+        "On paper, write the four related facts for 5, 8 and 13; then solve 15 − 8."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-24",
+      "dateStatus": "Undated completed schoolwork; cumulative review only.",
+      "questions": [
+        {
+          "id": "abvm-1124-related-facts-1",
+          "subject": "Math",
+          "skill": "subtraction-within-20",
+          "prompt": "15 − 8 = ?",
+          "answer": "7",
+          "choices": [
+            "6",
+            "7",
+            "8"
+          ],
+          "explanation": "8 + 7 = 15, so 15 − 8 = 7.",
+          "sourceFact": "Fresh original Grade 2 cumulative practice aligned to source-supported classroom skills; not an official test or dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Start at 8 and count up until you reach 15. The number of steps is the missing part."
+        },
+        {
+          "id": "abvm-1124-related-facts-2",
+          "subject": "Math",
+          "skill": "fact-families",
+          "prompt": "Which subtraction fact belongs with 6 + 8 = 14?",
+          "answer": "14 − 8 = 6",
+          "choices": [
+            "8 − 6 = 14",
+            "14 − 8 = 6",
+            "14 + 8 = 6"
+          ],
+          "explanation": "The whole 14 comes first in subtraction.",
+          "sourceFact": "Fresh original Grade 2 cumulative practice aligned to source-supported classroom skills; not an official test or dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Use the three numbers in the addition fact. In the related subtraction fact, the total must come first."
+        },
+        {
+          "id": "abvm-1124-related-facts-3",
+          "subject": "Math",
+          "skill": "missing-addend",
+          "prompt": "8 + ? = 15",
+          "answer": "7",
+          "choices": [
+            "6",
+            "7",
+            "9"
+          ],
+          "explanation": "15 − 8 = 7.",
+          "sourceFact": "Fresh original Grade 2 cumulative practice aligned to source-supported classroom skills; not an official test or dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Think of the two parts and the total. Count up from 8 until you reach 15."
+        },
+        {
+          "id": "abvm-1124-related-facts-4",
+          "subject": "Math",
+          "skill": "addition-within-100",
+          "prompt": "34 + 12 + 3 = ?",
+          "answer": "49",
+          "choices": [
+            "46",
+            "49",
+            "59"
+          ],
+          "explanation": "34 + 12 = 46, then add 3 to make 49.",
+          "sourceFact": "Fresh original Grade 2 cumulative practice aligned to source-supported classroom skills; not an official test or dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Add the tens and ones in the first two numbers, then count forward three more."
+        }
+      ]
+    },
+    {
+      "id": "nov24-cumulative-math-directions",
+      "title": "Doubles and two-step directions",
+      "subject": "Math",
+      "sources": [
+        "abvm-20261124-source-09.jpeg"
+      ],
+      "skills": [
+        "doubles-facts",
+        "doubles-plus-minus-one"
+      ],
+      "notes": [
+        "Double means add the same number twice.",
+        "Do the first instruction before the second. For double and subtract one, write both steps.",
+        "Check whether the direction says add or subtract."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-24",
+      "dateStatus": "Undated completed schoolwork; cumulative review only.",
+      "questions": [
+        {
+          "id": "abvm-1124-math-directions-1",
+          "subject": "Math",
+          "skill": "doubles-plus-minus-one",
+          "prompt": "Double 8. Subtract 1.",
+          "answer": "15",
+          "choices": [
+            "15",
+            "16",
+            "17"
+          ],
+          "explanation": "8 + 8 = 16; 16 − 1 = 15.",
+          "sourceFact": "Fresh original Grade 2 cumulative practice aligned to source-supported classroom skills; not an official test or dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Write 8 + 8 first. After finding the double, take away exactly one."
+        },
+        {
+          "id": "abvm-1124-math-directions-2",
+          "subject": "Math",
+          "skill": "doubles-plus-minus-one",
+          "prompt": "Double 5. Add 1.",
+          "answer": "11",
+          "choices": [
+            "9",
+            "10",
+            "11"
+          ],
+          "explanation": "5 + 5 = 10; 10 + 1 = 11.",
+          "sourceFact": "Fresh original Grade 2 cumulative practice aligned to source-supported classroom skills; not an official test or dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Write 5 + 5 first. After finding the double, count forward one more."
+        }
+      ]
+    },
+    {
+      "id": "nov24-cumulative-part-whole-stories",
+      "title": "Whole and part story problems",
+      "subject": "Math",
+      "sources": [
+        "abvm-20261124-source-11.jpeg"
+      ],
+      "skills": [
+        "part-whole-word-problems",
+        "subtraction-word-problems"
+      ],
+      "notes": [
+        "In a part-whole problem, identify the total and the known part before choosing an operation.",
+        "Draw a bar or a group of dots. If the whole and one part are known, subtract to find the other part.",
+        "Check that the two parts add up to the whole."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-24",
+      "dateStatus": "Undated completed schoolwork; cumulative review only.",
+      "questions": [
+        {
+          "id": "abvm-1124-part-whole-stories-1",
+          "subject": "Math",
+          "skill": "part-whole-word-problems",
+          "prompt": "A box has 17 crayons. Eight are blue. The rest are red. How many are red?",
+          "answer": "9",
+          "choices": [
+            "8",
+            "9",
+            "25"
+          ],
+          "explanation": "17 − 8 = 9; 8 + 9 = 17.",
+          "sourceFact": "Fresh original Grade 2 cumulative practice aligned to source-supported classroom skills; not an official test or dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Draw 17 marks and circle eight for the blue crayons. Count only the marks left outside the circle."
+        },
+        {
+          "id": "abvm-1124-part-whole-stories-2",
+          "subject": "Math",
+          "skill": "subtraction-word-problems",
+          "prompt": "There are 16 shells. Six are given away. How many remain?",
+          "answer": "10",
+          "choices": [
+            "9",
+            "10",
+            "22"
+          ],
+          "explanation": "16 − 6 = 10.",
+          "sourceFact": "Fresh original Grade 2 cumulative practice aligned to source-supported classroom skills; not an official test or dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Draw 16 shells, cross out six, and count the shells that remain without crossing out any more."
+        }
+      ]
+    },
+    {
+      "id": "nov24-cumulative-regrouping-tens",
+      "title": "Regroup ones into tens",
+      "subject": "Math",
+      "sources": [
+        "abvm-20261124-source-12.jpeg",
+        "abvm-20261124-source-13.jpeg"
+      ],
+      "skills": [
+        "place-value",
+        "tens-and-ones",
+        "addition-within-100",
+        "number-patterns"
+      ],
+      "notes": [
+        "Ten ones can be traded for one ten. The total amount stays the same.",
+        "When adding ones makes 10 or more, trade a ten and add it to the tens column.",
+        "Draw tens sticks and individual dots; practice turning 6 tens and 14 ones into standard tens and ones."
+      ],
+      "studiedOn": null,
+      "addedOn": "2026-11-24",
+      "dateStatus": "Undated completed schoolwork; cumulative review only.",
+      "questions": [
+        {
+          "id": "abvm-1124-regrouping-tens-1",
+          "subject": "Math",
+          "skill": "place-value",
+          "prompt": "6 tens and 14 ones equal what?",
+          "answer": "7 tens and 4 ones",
+          "choices": [
+            "6 tens and 4 ones",
+            "7 tens and 4 ones",
+            "7 tens and 14 ones"
+          ],
+          "explanation": "Trade 10 of the 14 ones for one ten.",
+          "sourceFact": "Fresh original Grade 2 cumulative practice aligned to source-supported classroom skills; not an official test or dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Circle a group of ten ones and trade it for a ten stick. Count the new total of tens and remaining ones."
+        },
+        {
+          "id": "abvm-1124-regrouping-tens-2",
+          "subject": "Math",
+          "skill": "addition-within-100",
+          "prompt": "47 + 26 = ?",
+          "answer": "73",
+          "choices": [
+            "63",
+            "73",
+            "72"
+          ],
+          "explanation": "7 + 6 = 13 ones; trade ten and add the extra ten.",
+          "sourceFact": "Fresh original Grade 2 cumulative practice aligned to source-supported classroom skills; not an official test or dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Add 7 and 6 in the ones column first. Trade ten ones for one extra ten before adding the tens."
+        },
+        {
+          "id": "abvm-1124-regrouping-tens-3",
+          "subject": "Math",
+          "skill": "number-patterns",
+          "prompt": "Add 3 to 24, 34, 44.",
+          "answer": "27, 37, 47",
+          "choices": [
+            "27, 37, 47",
+            "34, 44, 54",
+            "21, 31, 41"
+          ],
+          "explanation": "Each number increases by three.",
+          "sourceFact": "Fresh original Grade 2 cumulative practice aligned to source-supported classroom skills; not an official test or dated assignment.",
+          "tier": "material",
+          "questionType": "direct",
+          "difficulty": 2,
+          "dok": 1,
+          "domain": "Grade 2 cumulative classroom review",
+          "standards": [
+            "ABVM.CLASSROOM"
+          ],
+          "provenance": "original-practice-from-uploaded-schoolwork",
+          "hint": "Start with each number separately and count forward three. Keep the order of the starting numbers."
+        }
+      ]
     }
   ],
   "sourceManifest": [
@@ -6188,6 +6832,71 @@
       "sha256": "233e84a09bbd9de9daae00d9080260cd2b5b488640d77aeecbd24ec3b63ca521",
       "status": "held",
       "reason": "Blank reverse side; no instructional content."
+    },
+    {
+      "id": "abvm-20261124-source-01.jpeg",
+      "sha256": "bed9beb90710fd689c6b8769aeebe90295ecaaa1cd67e2e988e146e4d1857249",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261124-source-02.jpeg",
+      "sha256": "8944ae3ce31af3072e04809eced329bb4d0ef7fb27dada985065ff368bad9026",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261124-source-03.jpeg",
+      "sha256": "144988ccc6e090fe275b3dd70e2acb41c3036c9011ec1fd7fdb82ea3a35be32a",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261124-source-04.jpeg",
+      "sha256": "20e9dd9a7b67eb8bb51a7c8b8d6ef45a9555bb475199d65785b580fa86e3afb6",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261124-source-05.jpeg",
+      "sha256": "b95f4ba828a83589dd2c7985019274895b529a63e0150bf98876e31e84eee8ea",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261124-source-06.jpeg",
+      "sha256": "d36220c0ba06ba417a9257c4870db2083e7f31f456e180c1f3b06aa41ef7f7bc",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261124-source-07.jpeg",
+      "sha256": "cb0c51a4257a54f810727703ad2b682c5c2496a4a80e07bf11f030d1cb742a60",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261124-source-08.jpeg",
+      "sha256": "c89769831b6f282db5b1f5a629677e80c59d86101b84e8db23702c450a129372",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261124-source-09.jpeg",
+      "sha256": "907bb09c0105dd84060c2dcf11eda676e676c866d1415496b5b8c554d821a759",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261124-source-10.jpeg",
+      "sha256": "093430b4fc57d8cf127568648e0e1b47384c1b2912c374e86543518dd4058f12",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261124-source-11.jpeg",
+      "sha256": "7de73b91403ba5fdda0a3008fbe6a55ee5180f3026397467e683c62b05f47a94",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261124-source-12.jpeg",
+      "sha256": "e3ea9986fcb06e45c59f02b9cb90f3e844f0ecbfda33561ab2b0eb2612a47338",
+      "status": "integrated"
+    },
+    {
+      "id": "abvm-20261124-source-13.jpeg",
+      "sha256": "00399c9548e7fe95f28c36e6f8a2b941be3a94524611b189c9baec53e45940d0",
+      "status": "integrated"
     }
   ]
 }

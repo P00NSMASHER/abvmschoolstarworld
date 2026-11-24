@@ -29,7 +29,20 @@ test('all three reviewed sources, 34 notices and anonymous schoolwork survive in
  assert.equal(validateUploadedNoticePolicy(notice).documents,34);
  assert.equal(validateUploadedNoticeIntegration(data,notice).documents,34);
  assert.equal(data.pack.uploadedNoticeHash,noticeHash(notice));
- assert.equal(schoolwork.lessons.length,48);
+ const legacyLessonIds=["fact-families","subjects","writing","daily26","daily24","maintenance","feelings","daily23","daily21","library","religion2","daily22","spelling-oct-09-2026","nov26-common-proper-nouns","nov26-daily38-math","nov26-daily43-math","nov26-daily42-placevalue","nov26-families-work-words","nov26-daily39-math","nov26-daily40-math","nov26-organize-ideas","nov26-daily44-math","nov26-reading-detail","nov26-math-maintenance","nov26-spelling-patterns","nov26-families-work-reading","nov3-photo-math-ch2-written","nov3-photo-math-maintenance","nov3-photo-spelling-patterns","nov3-photo-math-ch2-four-choice","nov3-photo-nouns-written","nov3-photo-nouns-assessment","nov3-photo-day47-ela","nov3-photo-day47-math","nov3-photo-halloween-reading","nov3-photo-doubles-domino","nov10-returned-spelling-patterns","nov10-returned-math-maintenance","nov10-returned-math-chapter-two","nov12-pdf-unit2-o-phonemes","nov12-pdf-unit2-endings-words","nov12-pdf-unit2-u-phonemes","nov12-pdf-unit2-cvce","nov12-pdf-bear-vocabulary","nov12-pdf-warmup-language","nov12-pdf-warmup-math","nov12-pdf-subjects-predicates","nov12-pdf-placevalue-equivalence"];
+ const intakeLessonIds=["nov24-cumulative-long-vowel-patterns","nov24-cumulative-compound-words","nov24-cumulative-spelling-vowel-teams","nov24-cumulative-related-facts","nov24-cumulative-math-directions","nov24-cumulative-part-whole-stories","nov24-cumulative-regrouping-tens"];
+ const actualIds=schoolwork.lessons.map(lesson=>lesson.id);
+ assert.equal(actualIds.length,55);
+ assert.equal(new Set(actualIds).size,55);
+ assert.deepEqual(actualIds,[...legacyLessonIds,...intakeLessonIds]);
+ const intake=schoolwork.lessons.filter(lesson=>intakeLessonIds.includes(lesson.id));
+ assert.equal(intake.flatMap(lesson=>lesson.questions).length,20);
+ assert.ok(intake.every(lesson=>lesson.studiedOn===null&&lesson.addedOn==='2026-11-24'));
+ assert.equal(schoolwork.sourceManifest.length,128);
+ assert.equal(new Set(schoolwork.sourceManifest.map(source=>source.id)).size,128);
+ const sourceIds=new Set(intake.flatMap(lesson=>lesson.sources));
+ assert.equal(sourceIds.size,13);
+ for(const id of sourceIds){const source=schoolwork.sourceManifest.find(item=>item.id===id);assert.ok(source,id);assert.equal(source.status,'integrated');assert.match(source.sha256,/^[a-f0-9]{64}$/);}
  assert.ok(schoolwork.lessons.filter(lesson=>lesson.id.startsWith('abvm-20261112-')).every(lesson=>lesson.studiedOn==null));
 });
 
