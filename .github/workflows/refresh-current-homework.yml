@@ -11,9 +11,8 @@ on:
       - '.github/workflows/daily-source-recovery.yml'
       - '.github/workflows/refresh-current-homework.yml'
   schedule:
-    # Two off-peak attempts per hour reduce the update window when GitHub drops
-    # a delayed scheduled event under platform load.
-    - cron: '7,37 6-23 * * *'
+    # Stagger the owner-approved twice-daily check behind the full teacher scan.
+    - cron: '15 6,18 * * *'
       timezone: 'America/New_York'
   workflow_dispatch:
 

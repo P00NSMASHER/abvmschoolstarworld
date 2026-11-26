@@ -17,16 +17,8 @@ on:
       - 'scripts/refresh-reviewed-lunch.mjs'
       - '.github/workflows/refresh-reviewed-lunch-week.yml'
       - '.github/workflows/daily-source-recovery.yml'
-  schedule:
-    - cron: '11 6-23 * * *'
-      timezone: 'America/New_York'
-    # The last Homework poll is 11:23 PM. Recheck after its full 90-minute
-    # grace window so two dropped late-evening crons cannot stay stale until
-    # morning. The watchdog below provides an independent wake-up as well.
-    - cron: '59 0 * * *'
-      timezone: 'America/New_York'
   # Run bounded recovery after the watchdog, including a failed watchdog.
-  # GitHub cron may run late or be dropped, so it cannot be the sole trigger.
+  # Recovery remains failure/event driven instead of running a duplicate cron.
   workflow_run:
     workflows:
       - Monitor ABVM refresh health

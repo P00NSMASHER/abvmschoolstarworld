@@ -34,20 +34,20 @@ test('overnight acceptance works across spring DST, fall DST and year boundaries
 });
 test('previous-day proof expires at the first scheduled morning deadline, not at midnight',()=>{
   const checked='2026-10-22T03:55:00Z';
-  const before=assessDailySchoolSources(input('2026-10-22T11:36:00Z',checked));
+  const before=assessDailySchoolSources(input('2026-10-22T11:29:00Z',checked));
   assert.equal(before.curriculumFresh,true);assert.equal(before.homeworkFresh,true);
-  const teacherDue=assessDailySchoolSources(input('2026-10-22T11:48:00Z',checked));
+  const teacherDue=assessDailySchoolSources(input('2026-10-22T11:31:00Z',checked));
   assert.equal(teacherDue.curriculumFresh,false);
-  const homeworkDue=assessDailySchoolSources(input('2026-10-22T11:38:00Z',checked));
+  const homeworkDue=assessDailySchoolSources(input('2026-10-22T11:46:00Z',checked));
   assert.equal(homeworkDue.homeworkFresh,false);
 });
 test('a genuinely missed last scan stays stale overnight',()=>{
   const result=assessDailySchoolSources(input('2026-10-22T04:05:00Z','2026-10-21T19:00:00Z'));
-  assert.equal(result.curriculumFresh,false,'missed 3:47 p.m. teacher scan');
-  assert.equal(result.homeworkFresh,false,'missed later Homework scans');
+  assert.equal(result.curriculumFresh,false,'missed 6:00 p.m. teacher scan');
+  assert.equal(result.homeworkFresh,false,'missed 6:15 p.m. Homework scan');
 });
 test('overnight handling preserves hard age, future-time and source identity checks',()=>{
-  assert.equal(assessDailySchoolSources(input('2026-10-22T11:30:00Z','2026-10-22T03:23:00Z')).homeworkFresh,false,'eight-hour maximum unchanged');
+  assert.equal(assessDailySchoolSources(input('2026-10-22T18:00:00Z','2026-10-22T03:23:00Z')).homeworkFresh,false,'14.5-hour maximum enforced');
   for(const checked of ['invalid','2026-10-22T04:30:00Z']){
     const result=assessDailySchoolSources(input('2026-10-22T04:05:00Z',checked));
     assert.equal(result.curriculumFresh||result.homeworkFresh,false);

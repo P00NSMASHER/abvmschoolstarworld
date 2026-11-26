@@ -13,27 +13,27 @@ function plan(assessment,now,checkedAt){
   return recovery.reconcileScheduledSources(assessment,{now,checkedAt});
 }
 test('missed afternoon teacher scan is due before the old 20-hour stale limit',()=>{
-  const result=due('curriculum','2026-10-21T22:00:00Z','2026-10-21T13:50:00Z');
+  const result=due('curriculum','2026-10-22T00:00:00Z','2026-10-21T13:50:00Z');
   assert.equal(result.due,true);
   assert.equal(result.expectedSchoolDate,'2026-10-21');
-  assert.equal(result.expectedLocalTime,'15:47');
+  assert.equal(result.expectedLocalTime,'18:00');
 });
-test('missed hourly Homework polling is due before the old 8-hour limit',()=>{
-  assert.equal(due('homework','2026-10-21T20:00:00Z','2026-10-21T16:30:00Z').due,true);
+test('missed evening Homework polling is due after its grace window',()=>{
+  assert.equal(due('homework','2026-10-22T00:00:00Z','2026-10-21T16:30:00Z').due,true);
 });
 test('delayed but completed scan receives its full 90-minute schedule grace',()=>{
-  assert.equal(due('curriculum','2026-10-21T19:00:00Z','2026-10-21T17:20:00Z').due,false);
-  assert.equal(due('homework','2026-10-21T20:00:00Z','2026-10-21T18:25:00Z').due,false);
+  assert.equal(due('curriculum','2026-10-21T23:20:00Z','2026-10-21T13:50:00Z').due,false);
+  assert.equal(due('homework','2026-10-21T23:40:00Z','2026-10-21T16:30:00Z').due,false);
 });
 test('midnight does not invent a new scheduled source deadline',()=>{
-  const result=due('curriculum','2026-10-22T04:30:00Z','2026-10-21T20:00:00Z');
+  const result=due('curriculum','2026-10-22T04:30:00Z','2026-10-21T22:30:00Z');
   assert.equal(result.expectedSchoolDate,'2026-10-21');
   assert.equal(result.due,false);
 });
 test('morning deadline and Sunday DST follow New York time, not fixed UTC',()=>{
-  assert.equal(due('curriculum','2026-11-01T12:46:00Z','2026-10-31T20:00:00Z').due,false);
-  assert.equal(due('curriculum','2026-11-01T12:48:00Z','2026-10-31T20:00:00Z').due,true);
-  assert.equal(due('curriculum','2026-03-08T11:48:00Z','2026-03-07T21:00:00Z').due,true);
+  assert.equal(due('curriculum','2026-11-01T12:29:00Z','2026-10-31T23:00:00Z').due,false);
+  assert.equal(due('curriculum','2026-11-01T12:31:00Z','2026-10-31T23:00:00Z').due,true);
+  assert.equal(due('curriculum','2026-03-08T11:31:00Z','2026-03-07T21:00:00Z').due,true);
 });
 test('invalid and future evidence never satisfies a scheduled check',()=>{
   for(const checkedAt of [undefined,'invalid','2026-10-22T20:00:00Z']){
@@ -51,7 +51,7 @@ test('an invalid clock blocks rather than authorizing actions',()=>{
 test('controller requests missing scans without editing accepted evidence',()=>{
   const input=base(),original=structuredClone(input);
   const checkedAt={curriculum:'2026-10-21T13:50:00Z',homework:'2026-10-21T16:30:00Z'};
-  const result=plan(input,'2026-10-21T22:00:00Z',checkedAt);
+  const result=plan(input,'2026-10-22T00:00:00Z',checkedAt);
   assert.equal(result.refreshCurriculum,true);
   assert.equal(result.refreshHomework,true);
   assert.equal(result.phase,'refresh-required');

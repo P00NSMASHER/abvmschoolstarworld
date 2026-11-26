@@ -2,13 +2,7 @@ name: Import ABVM Yahoo weekly reminders
 
 on:
   schedule:
-    - cron: '55 5 * * *'
-      timezone: 'America/New_York'
-    - cron: '25 9 * * *'
-      timezone: 'America/New_York'
-    - cron: '55 12 * * *'
-      timezone: 'America/New_York'
-    - cron: '25 15 * * *'
+    - cron: '30 6,18 * * *'
       timezone: 'America/New_York'
   workflow_dispatch:
 

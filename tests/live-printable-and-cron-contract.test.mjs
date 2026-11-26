@@ -23,11 +23,10 @@ test('live printable acceptance checks only still-announced upcoming test dates'
 });
 
 test('operational documentation describes the actual Eastern cron schedule rather than stale UTC claims',()=>{
-  for(const slot of ["17 6 * * *","47 9 * * *","17 13 * * *","47 15 * * *"])
-    assert.ok(teacher.includes(slot),'teacher cron missing '+slot);
-  assert.ok(homework.includes("7,37 6-23 * * *"));
+  assert.ok(teacher.includes("0 6,18 * * *"));
+  assert.ok(homework.includes("15 6,18 * * *"));
   assert.ok(readme.includes("America/New_York"));
-  assert.ok(readme.includes("twice hourly"));
+  assert.ok(readme.includes("6:00 AM and 6:00 PM"));
   assert.ok(!readme.includes("06:23–23:23 UTC"));
   assert.ok(!readme.includes("four scheduled UTC source scans"));
 });

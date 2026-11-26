@@ -9,7 +9,7 @@ Each of the ten domains has five binary requirements below, worth two points eac
 | Domain | Five independently verifiable requirements |
 | --- | --- |
 | Deployment | Exact protected-main admission; full release QA; successful Pages publish; live curriculum/homework timestamp and hash parity; 24 consecutive hours of actual unattended operation, with at least three successful scheduled source-check opportunities and exact live parity for every changed publication |
-| Source automation | Six official pages verified; hourly homework scheduler enabled; unchanged checks retain truthful provenance; no manual curriculum promotion; source failure recovers within bounded policy |
+| Source automation | Six official pages verified; twice-daily school-data scheduler enabled; unchanged checks retain truthful provenance; no manual curriculum promotion; source failure recovers within bounded policy |
 | Recovery and monitoring | Success does not exhaust failure budget; at most two unsuccessful dispatches/day; active refresh prevents duplicates; stale homework fails dashboard; live source mismatch is detected and subsequently clears after real publication |
 | Daily planning | Today uses correct Eastern school date; old undated homework does not roll forward; Week includes five lunch states; latest authoritative event precedence passes; notifications remain accurate and dismissible |
 | Calendar and navigation | Month/week switching works; deep links preserve route; selected-day details match governed data; keyboard/focus works; phone/tablet/desktop rendered review passes |

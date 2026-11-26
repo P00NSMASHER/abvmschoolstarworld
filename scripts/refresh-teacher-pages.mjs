@@ -550,9 +550,9 @@ if (changeFeedIssues.length) throw new Error(`School change feed failed QA: ${JS
 data.source = 'ABVM Grade 2 public teacher pages and uploaded school notices';
 data.delivery = 'verified';
 data.syncPolicy = {
-  scheduledAt: ['6:17 AM', '9:47 AM', '1:17 PM', '3:47 PM'],
-  primaryAt: '6:17 AM',
-  backupAt: '9:47 AM',
+  scheduledAt: ['6:00 AM', '6:00 PM'],
+  primaryAt: '6:00 AM',
+  backupAt: '6:00 PM',
   timeZone: 'America/New_York',
   retriesPerSource: 3,
   source: `${SITE_ROOT}/home`,

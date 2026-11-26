@@ -73,7 +73,7 @@ Today/Week/Calendar without a reload. Full text remains authoritative before art
 arrives. Loaded images use the existing static cache; missing images fall back
 to text on every route.
 
-The existing hourly School Data Intake lane provides bounded missing-art recovery
+The existing twice-daily School Data Intake lane provides bounded missing-art recovery
 after its primary teacher/homework work if the merge event was missed or stopped.
 It reuses the canonical artwork PR/owner, preserves schedules and all release
 gates, and never makes art a prerequisite for school-data publication.

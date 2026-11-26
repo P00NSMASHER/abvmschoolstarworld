@@ -28,7 +28,7 @@ The reviewed-lunch path retains its own independent verification and protected s
 
 `scripts/source-freshness-recovery.mjs` remains the executable entry point. Its pure schedule policy is `scripts/refresh-controller.mjs`. It combines verified source timestamps, complete main/live JSON equality, the official Homework observation, and the actual configured New York schedules. A missed scan is due after a 90-minute delivery grace, not only when the older daily/8-hour age limit is exceeded. The age/schema/source-identity gates remain in force.
 
-The plan records one of `current`, `refresh-required`, `publish-required` or `evidence-incomplete`, plus the expected school date/time, real observed time, prior verified check timestamps and reasons. It never changes school facts or invents a successful check. Recovery runs hourly at :11 between 6 a.m. and 11 p.m. Eastern, after the existing watchdog, and on relevant main-branch policy changes. Actual source schedules remain unchanged.
+The plan records one of `current`, `refresh-required`, `publish-required` or `evidence-incomplete`, plus the expected school date/time, real observed time, prior verified check timestamps and reasons. It never changes school facts or invents a successful check. Primary source verification runs at 6 a.m. and 6 p.m. Eastern, with a staggered post-refresh watchdog. Recovery is event-driven after the watchdog and on relevant main-branch policy changes.
 
 Before standalone Pages recovery, inspect both its own history and the four main-branch source workflows that call Pages. An active teacher, Homework, reviewed-notice or Yahoo parent defers redundant publication; missing or malformed parent history blocks dispatch rather than inventing an idle queue. Deferral is not a successful deployment. Completed parents do not suppress a needed recovery.
 
@@ -36,7 +36,7 @@ Before dispatch, the existing recovery workflow checks active runs and preserves
 
 ## Existing independent supervision
 
-Keep the already-enabled hourly ABVM School Data Intake task as the independent scheduling path; no new task, paid service or credentials are needed. It must read current main, the current recovery plan, active runs and real live content before intervening. Do not start a competing publisher or re-open a resolved old failure. Report only a material unresolved incident, a verified recovery, or an unavoidable decision. Its existing schedule and notification settings are unchanged by this work.
+Keep the owner-approved 6 a.m./6 p.m. ABVM School Data Intake task as the independent scheduling path; no new task, paid service or credentials are needed. It must read current main, the current recovery plan, active runs and real live content before intervening. Do not start a competing publisher or re-open a resolved old failure. Report only a material unresolved incident, a verified recovery, or an unavoidable decision.
 
 The source and release logs remain the execution evidence. An accepted dispatch, a test fixture or a successful source job is not proof of live deployment. A superseded Pages attempt is not an ongoing outage if a later validated publisher and watchdog establish current live parity.
 

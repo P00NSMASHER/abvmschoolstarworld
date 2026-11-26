@@ -8,7 +8,7 @@ const watchdog=readText(new URL("../.github/workflows/refresh-health.yml",import
 const refresh=readFileSync(new URL("../scripts/refresh-teacher-pages.mjs",import.meta.url),"utf8");
 
 test("teacher refresh covers the school day and self-triggers only for refresh-relevant workflow changes",()=>{
-  for(const cron of ["17 6 * * *","47 9 * * *","17 13 * * *","47 15 * * *"])assert.match(workflow,new RegExp(cron.replace(/\*/g,"\\*")));
+  assert.match(workflow,/cron: '0 6,18 \* \* \*'/);
   assert.match(workflow,/scripts\/teacher-test-focus\.mjs/,
     "changing the shared upcoming-test filter must regenerate the public study pack");
   assert.match(workflow,/\.github\/workflows\/sync-study-pack\.yml/);
@@ -17,9 +17,9 @@ test("teacher refresh covers the school day and self-triggers only for refresh-r
 });
 
 test("published sync policy matches the workflow schedule",()=>{
-  assert.match(refresh,/scheduledAt: \['6:17 AM', '9:47 AM', '1:17 PM', '3:47 PM'\]/);
-  assert.match(refresh,/primaryAt: '6:17 AM'/);
-  assert.match(refresh,/backupAt: '9:47 AM'/);
+  assert.match(refresh,/scheduledAt: \['6:00 AM', '6:00 PM'\]/);
+  assert.match(refresh,/primaryAt: '6:00 AM'/);
+  assert.match(refresh,/backupAt: '6:00 PM'/);
 });
 
 

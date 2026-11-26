@@ -72,7 +72,7 @@ test('dashboard and existing watchdog inspect actual public data without manual 
   assert.match(dashboard,/SOURCE_RECOVERY_PLAN_FILE: source-recovery-plan\.json/);
   assert.match(dashboard,/node scripts\/fetch-health-history\.mjs/);
   assert.match(dashboard,/npm run health:report/);
-  assert.match(watchdog,/cron: '29 16 \* \* \*'/);
+  assert.match(watchdog,/cron: '45 6,18 \* \* \*'/);
   assert.match(watchdog,/timezone: 'America\/New_York'/);
   assert.match(watchdog,/workflow_run:[\s\S]*?Refresh ABVM teacher pages/);
   assert.match(watchdog,/workflow_run:[\s\S]*?Refresh current ABVM homework/);
